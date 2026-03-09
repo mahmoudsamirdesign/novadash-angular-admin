@@ -1,0 +1,12 @@
+<button
+  class="ui-button"
+  [attr.type]="type"
+  [class.block]="block"
+  [class.sm]="size === 'sm'"
+  [class.lg]="size === 'lg'"
+  [class.secondary]="variant === 'secondary'"
+  [class.ghost]="variant === 'ghost'"
+  [class.danger]="variant === 'danger'"
+  [disabled]="disabled">
+  <ng-content></ng-content>
+</button>

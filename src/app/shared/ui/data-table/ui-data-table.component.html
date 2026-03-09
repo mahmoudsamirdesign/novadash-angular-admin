@@ -1,0 +1,28 @@
+<div class="data-table">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th *ngFor="let col of columns; trackBy: trackByIndex" [style.width]="col.width" [class.align-center]="col.align === 'center'" [class.align-right]="col.align === 'right'">
+            {{ col.label }}
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="!loading && rows.length">
+        <tr *ngFor="let row of rows; trackBy: trackByIndex">
+          <td *ngFor="let col of columns; trackBy: trackByIndex" [class.align-center]="col.align === 'center'" [class.align-right]="col.align === 'right'">
+            <ng-container [ngSwitch]="col.type">
+              <ui-badge *ngSwitchCase="'badge'" [variant]="getBadgeVariant(col, row)">
+                {{ getCellValue(col, row) }}
+              </ui-badge>
+              <span *ngSwitchDefault>{{ getCellValue(col, row) }}</span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="table-state" *ngIf="loading">Loading...</div>
+    <div class="table-state" *ngIf="!loading && !rows.length">{{ emptyMessage }}</div>
+  </div>
+</div>

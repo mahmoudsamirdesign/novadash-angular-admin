@@ -1,0 +1,41 @@
+<div class="auth-page">
+  <ui-card padding="lg" class="auth-card">
+    <div class="auth-header">
+      <h1>Create your account</h1>
+      <p>Start building your SaaS in minutes.</p>
+    </div>
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+      <ui-field label="Full name" [error]="form.get('name')?.touched && form.get('name')?.invalid ? 'Enter your name.' : ''">
+        <input class="ui-input" type="text" autocomplete="name" placeholder="Jane Doe" formControlName="name" />
+      </ui-field>
+
+      <ui-field label="Work email" [error]="form.get('email')?.touched && form.get('email')?.invalid ? 'Enter a valid email.' : ''">
+        <input class="ui-input" type="email" autocomplete="email" placeholder="you@company.com" formControlName="email" />
+      </ui-field>
+
+      <ui-field label="Company" [error]="form.get('company')?.touched && form.get('company')?.invalid ? 'Company name is required.' : ''">
+        <input class="ui-input" type="text" autocomplete="organization" placeholder="Your company" formControlName="company" />
+      </ui-field>
+
+      <ui-field label="Password" [error]="form.get('password')?.touched && form.get('password')?.invalid ? 'At least 6 characters.' : ''">
+        <input class="ui-input" type="password" autocomplete="new-password" placeholder="••••••••" formControlName="password" />
+      </ui-field>
+
+      <label class="checkbox">
+        <input type="checkbox" formControlName="terms" />
+        <span>I agree to the terms of service</span>
+      </label>
+      <span class="checkbox-error" *ngIf="form.get('terms')?.touched && form.get('terms')?.invalid">You must accept the terms.</span>
+
+      <ui-button type="submit" [block]="true" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Creating account...' : 'Create account' }}
+      </ui-button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Already have an account?</span>
+      <a routerLink="/auth/login">Sign in</a>
+    </div>
+  </ui-card>
+</div>

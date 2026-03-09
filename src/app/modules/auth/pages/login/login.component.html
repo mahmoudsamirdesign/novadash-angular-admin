@@ -1,0 +1,44 @@
+<div class="auth-page">
+  <ui-card padding="lg" class="auth-card">
+    <div class="auth-header">
+      <h1>Welcome back</h1>
+      <p>Sign in to manage your workspace.</p>
+    </div>
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+      <ui-field label="Work email" [error]="form.get('email')?.touched && form.get('email')?.invalid ? 'Enter a valid email.' : ''">
+        <input class="ui-input" type="email" autocomplete="email" placeholder="you@company.com" formControlName="email" />
+      </ui-field>
+
+      <ui-field label="Password" [error]="form.get('password')?.touched && form.get('password')?.invalid ? 'Password must be at least 6 characters.' : ''">
+        <input class="ui-input" type="password" autocomplete="current-password" placeholder="••••••••" formControlName="password" />
+      </ui-field>
+
+      <div class="auth-row">
+        <label class="checkbox">
+          <input type="checkbox" formControlName="remember" />
+          <span>Remember me</span>
+        </label>
+        <a routerLink="/auth/forgot-password">Forgot password?</a>
+      </div>
+
+      <ui-button type="submit" [block]="true" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
+      </ui-button>
+    </form>
+
+    <div class="demo-panel">
+      <div>
+        <strong>Demo credentials</strong>
+        <p class="muted">Email: demo&#64;saaskit.com</p>
+        <p class="muted">Password: password</p>
+      </div>
+      <ui-button size="sm" variant="secondary" (click)="loginAsDemo()">Login as Demo</ui-button>
+    </div>
+
+    <div class="auth-footer">
+      <span>New here?</span>
+      <a routerLink="/auth/register">Create an account</a>
+    </div>
+  </ui-card>
+</div>

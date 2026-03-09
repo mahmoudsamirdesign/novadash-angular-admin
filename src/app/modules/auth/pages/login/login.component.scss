@@ -1,0 +1,40 @@
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox input {
+  width: 16px;
+  height: 16px;
+}
+
+.demo-panel {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.demo-panel strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.demo-panel .muted {
+  color: var(--color-muted);
+  font-size: 12px;
+  margin: 2px 0;
+}
+
+@media (max-width: 600px) {
+  .demo-panel {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

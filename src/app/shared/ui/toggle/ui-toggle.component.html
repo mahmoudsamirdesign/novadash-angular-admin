@@ -1,0 +1,5 @@
+<label class="ui-toggle">
+  <input type="checkbox" [checked]="checked" [disabled]="disabled" (change)="onToggle($event)">
+  <span class="track"></span>
+  <span class="label"><ng-content></ng-content></span>
+</label>

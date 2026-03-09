@@ -1,0 +1,73 @@
+<section class="activity-page">
+  <div class="page-hero">
+    <div>
+      <h2>Activity log</h2>
+      <p>Monitor critical actions across your workspace.</p>
+    </div>
+    <div class="actions">
+      <ui-button variant="secondary" (click)="refresh()">Refresh feed</ui-button>
+      <ui-button variant="ghost" (click)="exportLog()">Export log</ui-button>
+    </div>
+  </div>
+
+  <ui-card>
+    <div class="card-header">
+      <div>
+        <h3>Latest events</h3>
+        <p class="muted">Audit key actions from billing, security, and product updates.</p>
+      </div>
+      <div class="table-actions">
+        <input
+          class="ui-input"
+          type="search"
+          aria-label="Search activity"
+          placeholder="Search activity"
+          [ngModel]="query.search"
+          (ngModelChange)="updateSearch($event)" />
+        <select
+          class="ui-input"
+          [ngModel]="query.filters?.['type']"
+          (ngModelChange)="updateFilter($event)">
+          <option *ngFor="let type of typeOptions" [value]="type">
+            {{ type === 'all' ? 'All types' : (type | titlecase) }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <ui-loading *ngIf="isLoading" title="Syncing activity" message="Fetching the latest updates."></ui-loading>
+
+    <ui-error-state
+      *ngIf="!isLoading && hasError"
+      title="Activity feed unavailable"
+      message="We could not reach the activity service."
+      actionLabel="Retry"
+      (action)="retry()">
+    </ui-error-state>
+
+    <div class="activity-list" *ngIf="!isLoading && !hasError && (result?.items?.length ?? 0) > 0">
+      <div class="activity-item" *ngFor="let item of result?.items ?? []">
+        <div>
+          <strong>{{ item.title }}</strong>
+          <p class="muted">{{ item.meta }}</p>
+        </div>
+        <ui-badge [variant]="badgeVariant(item.type)">{{ item.type | titlecase }}</ui-badge>
+      </div>
+    </div>
+
+    <ui-empty-state
+      *ngIf="!isLoading && !hasError && (result?.items?.length ?? 0) === 0"
+      title="No activity yet"
+      message="Once events happen, they will appear here."
+      icon="history">
+    </ui-empty-state>
+
+    <ui-table-pagination
+      *ngIf="!isLoading && !hasError && result"
+      [page]="result.page"
+      [pageSize]="result.pageSize"
+      [total]="result.total"
+      (pageChange)="updatePagination($event)">
+    </ui-table-pagination>
+  </ui-card>
+</section>

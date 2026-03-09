@@ -1,0 +1,114 @@
+<div class="landing">
+  <header class="landing-header">
+    <div class="logo">NovaDash</div>
+    <nav class="nav">
+      <a routerLink="/app">Demo</a>
+      <a routerLink="/auth/login">Sign in</a>
+      <ui-button routerLink="/auth/register" size="sm">Get Started</ui-button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <ui-badge variant="info">Angular 19 SaaS Admin</ui-badge>
+      <h1>Launch a premium SaaS dashboard in days, not months.</h1>
+      <p>
+        A polished, production-ready admin template with auth screens, reusable UI, and a
+        beautiful data-rich layout. Built for teams who want to ship fast without sacrificing quality.
+      </p>
+      <div class="hero-actions">
+        <ui-button routerLink="/app" size="lg">View Live Demo</ui-button>
+        <ui-button routerLink="/auth/register" variant="secondary" size="lg">Create Account</ui-button>
+      </div>
+      <div class="hero-meta">
+        <span>Responsive · Dark mode · SCSS tokens</span>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <ui-card padding="lg">
+        <h3>Demo Snapshot</h3>
+        <p>Track revenue, users, and activation trends from one unified workspace.</p>
+        <div class="hero-stats">
+          <div>
+            <strong>$24.5k</strong>
+            <span>Monthly Revenue</span>
+          </div>
+          <div>
+            <strong>1,284</strong>
+            <span>Active Users</span>
+          </div>
+          <div>
+            <strong>2.1%</strong>
+            <span>Churn</span>
+          </div>
+        </div>
+      </ui-card>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="section-title">
+      <h2>Everything you need to sell a serious product.</h2>
+      <p>Modular pages, reusable components, and a clean architecture that buyers expect.</p>
+    </div>
+
+    <div class="feature-grid">
+      <ui-card *ngFor="let feature of features">
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </ui-card>
+    </div>
+  </section>
+
+  <section class="highlight">
+    <div class="highlight-copy">
+      <h2>Designed for founders and product teams.</h2>
+      <p>Ship fast with a layout that looks custom-built and scales with your product.</p>
+      <ul>
+        <li *ngFor="let item of highlights">{{ item }}</li>
+      </ul>
+      <ui-button routerLink="/app" variant="ghost">Explore the dashboard</ui-button>
+    </div>
+    <div class="highlight-panel">
+      <div class="panel-card">
+        <h4>Design System</h4>
+        <p>Tokens and shared UI ensure consistency across every page.</p>
+      </div>
+      <div class="panel-card">
+        <h4>Auth Flow</h4>
+        <p>Login, register, and password reset screens ready out of the box.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing">
+    <div class="section-title">
+      <h2>Simple pricing that scales with you.</h2>
+      <p>Use this section as the foundation for your own pricing plans.</p>
+    </div>
+    <div class="pricing-grid">
+      <ui-card *ngFor="let plan of pricing" padding="lg">
+        <div class="plan-header">
+          <h3>{{ plan.name }}</h3>
+          <ui-badge *ngIf="plan.badge" variant="success">{{ plan.badge }}</ui-badge>
+        </div>
+        <strong class="plan-price">{{ plan.price }}</strong>
+        <p>{{ plan.description }}</p>
+        <ui-button routerLink="/auth/register" [block]="true">Choose plan</ui-button>
+      </ui-card>
+    </div>
+  </section>
+
+  <footer class="landing-footer">
+    <div>
+      <strong>NovaDash</strong>
+      <p>Premium Angular admin template.</p>
+    </div>
+    <div class="footer-links">
+      <a routerLink="/auth/login">Sign in</a>
+      <a routerLink="/app">Dashboard</a>
+      <a routerLink="/auth/register">Get started</a>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,12 @@
+<div class="error-state">
+  <div class="icon">
+    <span class="material-icons">{{ icon }}</span>
+  </div>
+  <div class="content">
+    <h4>{{ title }}</h4>
+    <p>{{ message }}</p>
+  </div>
+  <ui-button *ngIf="actionLabel" [variant]="actionVariant" (click)="action.emit()">
+    {{ actionLabel }}
+  </ui-button>
+</div>

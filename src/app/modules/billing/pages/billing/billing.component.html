@@ -1,0 +1,287 @@
+<section class="billing-page">
+  <div class="page-hero">
+    <div>
+      <h2>Billing</h2>
+      <p>Manage subscription, invoices, and usage limits.</p>
+    </div>
+    <ui-button
+      variant="secondary"
+      [disabled]="!canManageBilling || isLoadingSummary"
+      (click)="openPlanModal()">
+      Change plan
+    </ui-button>
+  </div>
+
+  <div class="billing-grid">
+    <ui-card class="plan-card">
+      <div class="card-header">
+        <h3>Current plan</h3>
+        <ui-badge variant="success">{{ summary?.currentPlan?.name ?? '—' }}</ui-badge>
+      </div>
+      <ui-loading
+        *ngIf="isLoadingSummary"
+        title="Loading plan"
+        message="Fetching subscription details.">
+      </ui-loading>
+      <ng-container *ngIf="!isLoadingSummary && summary">
+        <p class="plan-price">{{ summary.currentPlan.price }}</p>
+        <p class="muted">{{ summary.currentPlan.renewal }}</p>
+        <div class="card-actions">
+          <ui-button
+            [disabled]="!canManageBilling || isLoadingSummary"
+            (click)="openPlanModal()">
+            Upgrade plan
+          </ui-button>
+          <ui-button variant="ghost" (click)="viewPlanDetails()">View plan details</ui-button>
+        </div>
+      </ng-container>
+    </ui-card>
+
+    <ui-card class="payment-card">
+      <div class="card-header">
+        <h3>Payment method</h3>
+        <ui-badge variant="info">Primary</ui-badge>
+      </div>
+      <ui-loading
+        *ngIf="isLoadingSummary"
+        title="Loading payment"
+        message="Fetching payment method.">
+      </ui-loading>
+      <div class="payment-info" *ngIf="!isLoadingSummary && summary">
+        <div>
+          <strong>{{ summary.paymentMethod.brand }} ending in {{ summary.paymentMethod.last4 }}</strong>
+          <p class="muted">
+            Expires {{ summary.paymentMethod.expiry }} · Billing contact:
+            {{ summary.paymentMethod.contactEmail }}
+          </p>
+        </div>
+        <ui-button variant="secondary" (click)="updateCard()">Update card</ui-button>
+      </div>
+    </ui-card>
+  </div>
+
+  <ui-card class="usage-card">
+    <div class="card-header">
+      <div>
+        <h3>Usage & limits</h3>
+        <p class="muted">Track consumption across your plan limits.</p>
+      </div>
+      <ui-button
+        variant="ghost"
+        [disabled]="isUsageLoading || isLoadingSummary"
+        (click)="refreshUsage()">
+        Refresh
+      </ui-button>
+    </div>
+
+    <ui-loading
+      *ngIf="isUsageLoading || isLoadingSummary"
+      title="Refreshing usage"
+      message="Updating your plan metrics.">
+    </ui-loading>
+
+    <div class="usage-list" *ngIf="!isUsageLoading && !isLoadingSummary && summary">
+      <div class="usage-item" *ngFor="let item of summary.usage">
+        <span>{{ item.label }}</span>
+        <strong>{{ item.value }}</strong>
+      </div>
+    </div>
+  </ui-card>
+
+  <ui-card class="invoice-card">
+    <div class="card-header">
+      <div>
+        <h3>Invoices</h3>
+        <p class="muted">Download or export your billing history.</p>
+      </div>
+      <div class="card-actions">
+        <ui-button
+          variant="secondary"
+          [disabled]="isLoadingInvoices || (invoiceResult?.items?.length ?? 0) === 0"
+          (click)="downloadInvoice()">
+          Download latest
+        </ui-button>
+      </div>
+    </div>
+    <div class="table-actions">
+      <input
+        class="ui-input"
+        type="search"
+        aria-label="Search invoices"
+        placeholder="Search invoices"
+        [ngModel]="query.search"
+        (ngModelChange)="updateSearch($event)" />
+      <select
+        class="ui-input"
+        [ngModel]="query.filters?.['status']"
+        (ngModelChange)="updateFilter($event)">
+        <option *ngFor="let status of statusOptions" [value]="status">
+          {{ status === 'all' ? 'All statuses' : (status | titlecase) }}
+        </option>
+      </select>
+    </div>
+
+    <ui-loading *ngIf="isLoadingInvoices" title="Loading invoices" message="Syncing billing history."></ui-loading>
+
+    <ui-data-table
+      *ngIf="!isLoadingInvoices"
+      [columns]="invoiceColumns"
+      [rows]="invoiceResult?.items ?? []"
+      emptyMessage="No invoices match your filters.">
+    </ui-data-table>
+
+    <ui-table-pagination
+      *ngIf="!isLoadingInvoices && invoiceResult"
+      [page]="invoiceResult.page"
+      [pageSize]="invoiceResult.pageSize"
+      [total]="invoiceResult.total"
+      (pageChange)="updatePagination($event)">
+    </ui-table-pagination>
+  </ui-card>
+
+  <ui-modal
+    [open]="isPlanModalOpen"
+    size="lg"
+    title="Change your plan"
+    description="Select the plan that matches your team size."
+    (closed)="closePlanModal()">
+    <div class="plan-options">
+      <div class="plan-option" *ngFor="let plan of summary?.plans ?? []">
+        <div>
+          <strong>{{ plan.name }}</strong>
+          <p class="muted">{{ plan.description }}</p>
+        </div>
+        <span class="price">{{ plan.price }}</span>
+        <ui-button variant="secondary" (click)="confirmPlanChange(plan.id)">Select</ui-button>
+      </div>
+    </div>
+    <div modal-actions>
+      <ui-button variant="ghost" (click)="closePlanModal()">Close</ui-button>
+    </div>
+  </ui-modal>
+
+  <ui-modal
+    [open]="isPlanDetailsOpen"
+    size="lg"
+    title="Plan details"
+    description="Review included limits and upgrade options."
+    (closed)="closePlanDetails()">
+    <div class="plan-details" *ngIf="summary">
+      <div class="plan-summary">
+        <div>
+          <h4>{{ summary.currentPlan.name }}</h4>
+          <p class="muted">{{ summary.currentPlan.description }}</p>
+        </div>
+        <div class="plan-meta">
+          <span class="price">{{ summary.currentPlan.price }}</span>
+          <span class="cycle">{{ summary.currentPlan.billingCycle }}</span>
+        </div>
+      </div>
+
+      <div class="limits-grid">
+        <div class="limit" *ngFor="let limit of summary.currentPlan.limits">
+          <span class="label">{{ limit.label }}</span>
+          <strong>{{ limit.value }}</strong>
+        </div>
+      </div>
+
+      <div class="upgrade-header">
+        <h4>Upgrade options</h4>
+        <p class="muted">Switch plans at the end of your billing cycle.</p>
+      </div>
+
+      <div class="upgrade-list">
+        <div class="upgrade-item" *ngFor="let plan of summary.plans">
+          <div>
+            <div class="upgrade-title">
+              <strong>{{ plan.name }}</strong>
+              <ui-badge *ngIf="plan.id === summary.currentPlan.id" variant="info">Current</ui-badge>
+            </div>
+            <p class="muted">{{ plan.description }}</p>
+          </div>
+          <div class="upgrade-meta">
+            <span class="price">{{ plan.price }}</span>
+            <span class="cycle">{{ plan.billingCycle }}</span>
+          </div>
+          <ui-button
+            variant="secondary"
+            [disabled]="plan.id === summary.currentPlan.id || !canManageBilling"
+            (click)="selectPlanFromDetails(plan.id)">
+            Select plan
+          </ui-button>
+        </div>
+      </div>
+    </div>
+    <div modal-actions>
+      <ui-button variant="ghost" (click)="closePlanDetails()">Close</ui-button>
+    </div>
+  </ui-modal>
+
+  <ui-modal
+    [open]="isCardModalOpen"
+    size="md"
+    title="Update payment method"
+    description="Add or replace the card used for billing."
+    (closed)="closeCardModal()">
+    <form class="card-form" [formGroup]="cardForm" (ngSubmit)="saveCard()">
+      <ui-field
+        label="Cardholder name"
+        [error]="cardForm.get('cardholderName')?.touched && cardForm.get('cardholderName')?.invalid ? 'Name is required.' : ''">
+        <input
+          class="ui-input"
+          type="text"
+          autocomplete="cc-name"
+          placeholder="Jane Doe"
+          formControlName="cardholderName" />
+      </ui-field>
+
+      <ui-field
+        label="Card number"
+        [error]="cardForm.get('cardNumber')?.touched && cardForm.get('cardNumber')?.invalid ? 'Enter a valid card number.' : ''">
+        <input
+          class="ui-input"
+          type="text"
+          inputmode="numeric"
+          autocomplete="cc-number"
+          placeholder="4242 4242 4242 4242"
+          formControlName="cardNumber" />
+      </ui-field>
+
+      <div class="card-grid">
+        <ui-field
+          label="Expiry"
+          hint="MM/YY"
+          [error]="cardForm.get('expiry')?.touched && cardForm.get('expiry')?.invalid ? 'Use MM/YY format.' : ''">
+          <input
+            class="ui-input"
+            type="text"
+            inputmode="numeric"
+            autocomplete="cc-exp"
+            placeholder="08/27"
+            formControlName="expiry" />
+        </ui-field>
+
+        <ui-field
+          label="CVC"
+          [error]="cardForm.get('cvc')?.touched && cardForm.get('cvc')?.invalid ? 'Enter a valid CVC.' : ''">
+          <input
+            class="ui-input"
+            type="password"
+            inputmode="numeric"
+            autocomplete="cc-csc"
+            placeholder="123"
+            formControlName="cvc" />
+        </ui-field>
+      </div>
+
+      <p class="form-note">Payments are processed securely with PCI-compliant providers.</p>
+
+      <div modal-actions class="modal-actions">
+        <ui-button variant="ghost" type="button" (click)="closeCardModal()">Cancel</ui-button>
+        <ui-button type="submit" [disabled]="cardForm.invalid || isSavingCard">
+          {{ isSavingCard ? 'Saving...' : 'Save card' }}
+        </ui-button>
+      </div>
+    </form>
+  </ui-modal>
+</section>

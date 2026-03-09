@@ -1,0 +1,85 @@
+<section class="users-page">
+  <div class="page-hero">
+    <div>
+      <h2>Team directory</h2>
+      <p>View activity and manage roles across your workspace.</p>
+    </div>
+    <ui-button (click)="inviteUser()">Invite teammate</ui-button>
+  </div>
+
+  <ui-loading
+    *ngIf="isStatsLoading"
+    title="Loading user stats"
+    message="Preparing your member overview.">
+  </ui-loading>
+
+  <div class="stats-grid" *ngIf="!isStatsLoading && stats">
+    <ui-card>
+      <p class="label">Total members</p>
+      <h3>{{ stats.total }}</h3>
+      <span class="trend positive">Updated today</span>
+    </ui-card>
+    <ui-card>
+      <p class="label">Active today</p>
+      <h3>{{ stats.activeToday }}</h3>
+      <span class="trend positive">+12% vs last week</span>
+    </ui-card>
+    <ui-card>
+      <p class="label">Pending invites</p>
+      <h3>{{ stats.pendingInvites }}</h3>
+      <span class="trend warning">2 expiring soon</span>
+    </ui-card>
+  </div>
+
+  <ui-card>
+    <div class="table-header">
+      <div>
+        <h3>Members</h3>
+        <p>Search by name, team, or role.</p>
+      </div>
+      <div class="table-actions">
+        <input
+          class="ui-input"
+          type="search"
+          aria-label="Search users"
+          placeholder="Search users"
+          [ngModel]="query.search"
+          (ngModelChange)="updateSearch($event)" />
+        <select
+          class="ui-input"
+          [ngModel]="query.filters?.['status']"
+          (ngModelChange)="updateFilter('status', $event)">
+          <option *ngFor="let status of statusOptions" [value]="status">
+            {{ status === 'all' ? 'All statuses' : (status | titlecase) }}
+          </option>
+        </select>
+        <select
+          class="ui-input"
+          [ngModel]="query.filters?.['role']"
+          (ngModelChange)="updateFilter('role', $event)">
+          <option *ngFor="let role of roleOptions" [value]="role">
+            {{ role === 'all' ? 'All roles' : (role | titlecase) }}
+          </option>
+        </select>
+        <ui-button variant="secondary" (click)="exportUsers()">Export list</ui-button>
+      </div>
+    </div>
+
+    <ui-loading *ngIf="isLoading" title="Loading users" message="Syncing the latest team list."></ui-loading>
+
+    <ui-data-table
+      *ngIf="!isLoading"
+      [columns]="columns"
+      [rows]="result?.items ?? []"
+      emptyMessage="No matching users.">
+    </ui-data-table>
+
+    <ui-table-pagination
+      *ngIf="!isLoading && result"
+      [page]="result.page"
+      [pageSize]="result.pageSize"
+      [total]="result.total"
+      (pageChange)="updatePagination($event)">
+    </ui-table-pagination>
+  </ui-card>
+</section>

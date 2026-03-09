@@ -1,0 +1,59 @@
+.ui-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--color-text);
+  position: relative;
+}
+
+.ui-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.track {
+  width: 42px;
+  height: 24px;
+  background: var(--color-border);
+  border-radius: 999px;
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+.track::after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background: var(--color-surface);
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  transition: transform 0.2s ease, background 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-toggle input:checked + .track {
+  background: var(--color-primary);
+}
+
+.ui-toggle input:checked + .track::after {
+  transform: translateX(16px);
+  background: #ffffff;
+}
+
+.ui-toggle input:focus-visible + .track {
+  outline: 2px solid rgba(37, 99, 235, 0.5);
+  outline-offset: 2px;
+}
+
+.ui-toggle input:disabled + .track {
+  opacity: 0.6;
+}
+
+.label {
+  color: var(--color-muted);
+}

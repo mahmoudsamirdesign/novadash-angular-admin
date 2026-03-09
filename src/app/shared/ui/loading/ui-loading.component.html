@@ -1,0 +1,7 @@
+<div class="ui-loading" [class.inline]="inline" [class.sm]="size === 'sm'" [class.lg]="size === 'lg'">
+  <div class="spinner"></div>
+  <div class="content">
+    <strong>{{ title }}</strong>
+    <p *ngIf="message">{{ message }}</p>
+  </div>
+</div>

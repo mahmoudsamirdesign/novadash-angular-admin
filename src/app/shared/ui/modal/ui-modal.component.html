@@ -1,0 +1,27 @@
+<div class="ui-modal-backdrop" *ngIf="open" (click)="onBackdropClick()">
+  <div
+    class="ui-modal"
+    role="dialog"
+    aria-modal="true"
+    [class.sm]="size === 'sm'"
+    [class.lg]="size === 'lg'"
+    (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <div>
+        <h3>{{ title }}</h3>
+        <p *ngIf="description">{{ description }}</p>
+      </div>
+      <button *ngIf="dismissible" class="close-btn" aria-label="Close dialog" (click)="closed.emit()">
+        <span class="material-icons">close</span>
+      </button>
+    </header>
+
+    <div class="modal-body">
+      <ng-content></ng-content>
+    </div>
+
+    <footer class="modal-footer">
+      <ng-content select="[modal-actions]"></ng-content>
+    </footer>
+  </div>
+</div>

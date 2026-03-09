@@ -1,0 +1,45 @@
+<section class="settings-page">
+  <div class="settings-grid">
+    <ui-card>
+      <h3>Workspace</h3>
+      <p class="muted">Manage your workspace preferences.</p>
+      <div class="setting-row">
+        <div>
+          <strong>Notifications</strong>
+          <p class="muted">Enable real-time alerts for critical events.</p>
+        </div>
+        <ui-toggle [(checked)]="notifications"></ui-toggle>
+      </div>
+      <div class="setting-row">
+        <div>
+          <strong>Weekly digest</strong>
+          <p class="muted">Summary of product performance every Monday.</p>
+        </div>
+        <ui-toggle [(checked)]="weeklyDigest"></ui-toggle>
+      </div>
+      <div class="setting-row">
+        <div>
+          <strong>Product updates</strong>
+          <p class="muted">Get updates about new features and releases.</p>
+        </div>
+        <ui-toggle [(checked)]="productUpdates"></ui-toggle>
+      </div>
+    </ui-card>
+
+    <ui-card>
+      <h3>Security</h3>
+      <p class="muted">Control authentication requirements.</p>
+      <div class="setting-row">
+        <div>
+          <strong>Enforce MFA</strong>
+          <p class="muted">Require multi-factor authentication for all members.</p>
+        </div>
+        <ui-toggle [(checked)]="enforceMfa"></ui-toggle>
+      </div>
+      <div class="setting-actions">
+        <ui-button variant="secondary" (click)="downloadAuditLog()">Download audit log</ui-button>
+        <ui-button (click)="saveChanges()">Save changes</ui-button>
+      </div>
+    </ui-card>
+  </div>
+</section>

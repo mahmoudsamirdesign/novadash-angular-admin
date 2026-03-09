@@ -1,0 +1,255 @@
+.billing-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.billing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.billing-page .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.plan-price {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-family: var(--font-display);
+}
+
+.card-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 16px;
+  flex-wrap: wrap;
+}
+
+.payment-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.usage-list {
+  display: grid;
+  gap: 12px;
+}
+
+.usage-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+}
+
+.plan-options {
+  display: grid;
+  gap: 14px;
+}
+
+.plan-option {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface-2);
+}
+
+.plan-option .price {
+  font-weight: 600;
+}
+
+.plan-details {
+  display: grid;
+  gap: 20px;
+}
+
+.plan-summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+}
+
+.plan-summary h4 {
+  margin-bottom: 6px;
+}
+
+.plan-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.plan-meta .price {
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.plan-meta .cycle {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.limits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.limit {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.limit .label {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.upgrade-header h4 {
+  margin-bottom: 6px;
+}
+
+.upgrade-list {
+  display: grid;
+  gap: 12px;
+}
+
+.upgrade-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+}
+
+.upgrade-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.upgrade-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.upgrade-meta .price {
+  font-weight: 600;
+}
+
+.upgrade-meta .cycle {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.card-form {
+  display: grid;
+  gap: 16px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.form-note {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .billing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .table-actions {
+    width: 100%;
+  }
+
+  .table-actions .ui-input {
+    flex: 1;
+  }
+
+  .plan-option {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+  }
+
+  .plan-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .plan-meta {
+    align-items: flex-start;
+  }
+
+  .limits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .upgrade-item {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+  }
+
+  .upgrade-meta {
+    align-items: flex-start;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}

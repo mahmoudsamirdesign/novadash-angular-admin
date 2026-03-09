@@ -1,0 +1,19 @@
+<div class="toast-container" *ngIf="(toasts$ | async) as toasts">
+  <div
+    class="toast"
+    *ngFor="let toast of toasts; trackBy: trackById"
+    [class.success]="toast.variant === 'success'"
+    [class.warning]="toast.variant === 'warning'"
+    [class.error]="toast.variant === 'error'">
+    <div class="toast-icon">
+      <span class="material-icons">{{ iconFor(toast.variant) }}</span>
+    </div>
+    <div class="toast-content">
+      <strong>{{ toast.title }}</strong>
+      <p *ngIf="toast.message">{{ toast.message }}</p>
+    </div>
+    <button class="toast-close" aria-label="Dismiss" (click)="dismiss(toast.id)">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+</div>

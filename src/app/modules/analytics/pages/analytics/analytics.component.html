@@ -1,0 +1,53 @@
+<section class="analytics-page">
+  <div class="summary-grid">
+    <ui-card>
+      <p class="label">Weekly active users</p>
+      <h3>6,420</h3>
+      <span class="trend positive">+14.2%</span>
+    </ui-card>
+    <ui-card>
+      <p class="label">Conversion rate</p>
+      <h3>4.8%</h3>
+      <span class="trend positive">+0.6%</span>
+    </ui-card>
+    <ui-card>
+      <p class="label">Avg. session</p>
+      <h3>3m 12s</h3>
+      <span class="trend warning">-0.4%</span>
+    </ui-card>
+  </div>
+
+  <ui-card>
+    <div class="card-header">
+      <div>
+        <h3>Engagement overview</h3>
+        <p>Daily active sessions over the last 7 days.</p>
+      </div>
+      <span class="pill">Last 7 days</span>
+    </div>
+    <div class="chart-wrapper">
+      <canvas baseChart [data]="barChartData" [options]="barChartOptions" type="bar"></canvas>
+    </div>
+  </ui-card>
+
+  <div class="insights-grid">
+    <ui-card>
+      <h3>Retention highlights</h3>
+      <p class="muted">34% of new users return within 24 hours.</p>
+      <ul>
+        <li>Onboarding completion: 78%</li>
+        <li>Activation rate: 62%</li>
+        <li>Feature adoption: 41%</li>
+      </ul>
+    </ui-card>
+    <ui-card>
+      <h3>Top acquisition</h3>
+      <p class="muted">Organic and referrals are driving the majority of signups.</p>
+      <ul>
+        <li>Organic search: 46%</li>
+        <li>Referrals: 28%</li>
+        <li>Paid ads: 18%</li>
+      </ul>
+    </ui-card>
+  </div>
+</section>

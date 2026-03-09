@@ -1,0 +1,27 @@
+.ui-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.required {
+  color: var(--color-danger);
+  margin-left: 4px;
+}
+
+.hint {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: 12px;
+}

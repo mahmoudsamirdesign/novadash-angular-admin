@@ -1,0 +1,69 @@
+<aside
+  class="sidebar"
+  [class.closed]="!isOpen"
+  [class.mobile]="isMobile"
+  [class.mobile-open]="isMobile && isOpen">
+
+  <div class="logo">
+    NovaDash
+  </div>
+
+  <nav class="nav-links" aria-label="Main navigation">
+    <a
+      routerLink="/app"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="closeSidebar.emit()">
+      <span class="material-icons">dashboard</span>
+      <span class="link-text">Dashboard</span>
+    </a>
+
+    <a
+      routerLink="/app/users"
+      routerLinkActive="active"
+      (click)="closeSidebar.emit()">
+      <span class="material-icons">group</span>
+      <span class="link-text">Users</span>
+    </a>
+
+    <a
+      routerLink="/app/analytics"
+      routerLinkActive="active"
+      (click)="closeSidebar.emit()">
+      <span class="material-icons">bar_chart</span>
+      <span class="link-text">Analytics</span>
+    </a>
+
+    <a
+      routerLink="/app/billing"
+      routerLinkActive="active"
+      (click)="closeSidebar.emit()">
+      <span class="material-icons">credit_card</span>
+      <span class="link-text">Billing</span>
+    </a>
+
+    <a
+      routerLink="/app/team"
+      routerLinkActive="active"
+      (click)="closeSidebar.emit()">
+      <span class="material-icons">groups</span>
+      <span class="link-text">Team</span>
+    </a>
+
+    <a
+      routerLink="/app/activity"
+      routerLinkActive="active"
+      (click)="closeSidebar.emit()">
+      <span class="material-icons">history</span>
+      <span class="link-text">Activity</span>
+    </a>
+
+    <a
+      routerLink="/app/settings"
+      routerLinkActive="active"
+      (click)="closeSidebar.emit()">
+      <span class="material-icons">settings</span>
+      <span class="link-text">Settings</span>
+    </a>
+  </nav>
+</aside>
