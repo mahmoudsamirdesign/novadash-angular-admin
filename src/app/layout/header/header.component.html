@@ -1,6 +1,6 @@
 <header class="header">
     <div class="header-left">
-        <button class="menu-btn" *ngIf="isMobile" (click)="menuClick.emit()">
+        <button class="menu-btn" *ngIf="isMobile" (click)="menuClick.emit()" aria-label="Open menu">
             <span class="material-icons">menu</span>
         </button>
 
@@ -11,27 +11,128 @@
     </div>
 
     <div class="header-actions">
-
-        <button class="icon-btn" (click)="toggleDarkMode()">
+        <button class="icon-btn" (click)="toggleDarkMode()" aria-label="Toggle dark mode">
             <span class="material-icons">
                 {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
             </span>
         </button>
-        
-        <button class="icon-btn">
-            <span class="material-icons">notifications</span>
-        </button>
 
-        <button class="icon-btn">
+        <div class="dropdown" #notificationsMenu (click)="$event.stopPropagation()">
+            <button
+              class="icon-btn"
+              (click)="toggleNotifications($event)"
+              [attr.aria-expanded]="notificationsOpen"
+              aria-label="Notifications">
+                <span class="material-icons">notifications</span>
+                <span class="notification-dot" *ngIf="notifications.length"></span>
+            </button>
+
+            <div class="dropdown-panel" *ngIf="notificationsOpen">
+                <div class="dropdown-header">
+                    <div>
+                        <strong>Notifications</strong>
+                        <p class="muted">{{ notifications.length }} updates</p>
+                    </div>
+                    <button class="link-btn" type="button" (click)="viewAllNotifications()">View all</button>
+                </div>
+
+                <div class="notification-list">
+                    <button class="notification-item" *ngFor="let item of notifications" type="button">
+                        <span class="notification-icon material-icons">{{ item.icon }}</span>
+                        <div>
+                            <strong>{{ item.title }}</strong>
+                            <p class="muted">{{ item.meta }}</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="dropdown-footer">
+                    <ui-button size="sm" variant="ghost" (click)="viewAllNotifications()">
+                      View all notifications
+                    </ui-button>
+                </div>
+            </div>
+        </div>
+
+        <button class="icon-btn" aria-label="Search" (click)="openSearch($event)">
             <span class="material-icons">search</span>
         </button>
 
-        <div class="profile-box">
-            <div class="avatar">AO</div>
-            <div class="profile-info">
-                <strong>Abdo</strong>
-                <span>Admin</span>
+        <div class="dropdown profile-dropdown" #profileMenu (click)="$event.stopPropagation()">
+            <button
+              class="profile-box"
+              type="button"
+              (click)="toggleProfile($event)"
+              [attr.aria-expanded]="profileOpen"
+              aria-label="Profile menu">
+                <div class="avatar">{{ userInitials }}</div>
+                <div class="profile-info">
+                    <strong>{{ userName }}</strong>
+                    <span>{{ userRole }}</span>
+                </div>
+                <span class="material-icons chevron">expand_more</span>
+            </button>
+
+            <div class="dropdown-panel profile-panel" *ngIf="profileOpen">
+                <div class="profile-summary">
+                    <div class="avatar">{{ userInitials }}</div>
+                    <div>
+                        <strong>{{ userName }}</strong>
+                        <p class="muted">{{ userEmail }}</p>
+                    </div>
+                </div>
+
+                <button class="menu-item" type="button" (click)="onProfileAction('profile')">
+                    <span class="material-icons">person</span>
+                    Profile
+                </button>
+                <button class="menu-item" type="button" (click)="onProfileAction('settings')">
+                    <span class="material-icons">settings</span>
+                    Account Settings
+                </button>
+                <button class="menu-item danger" type="button" (click)="onProfileAction('logout')">
+                    <span class="material-icons">logout</span>
+                    Logout
+                </button>
             </div>
         </div>
     </div>
 </header>
+
+<ui-modal
+  [open]="searchOpen"
+  size="md"
+  title="Search"
+  description="Quickly jump to key pages and workflows."
+  (closed)="closeSearch()">
+  <div class="search-modal">
+    <div class="search-input">
+      <span class="material-icons">search</span>
+      <input
+        class="ui-input"
+        type="search"
+        placeholder="Search pages"
+        [(ngModel)]="searchQuery" />
+    </div>
+
+    <div class="search-section">
+      <p class="section-title">Quick navigation</p>
+      <button
+        class="search-item"
+        type="button"
+        *ngFor="let item of filteredSuggestions"
+        (click)="navigate(item.route)">
+        <div class="search-item-icon material-icons">{{ item.icon }}</div>
+        <div class="search-item-text">
+          <strong>{{ item.label }}</strong>
+          <span class="muted">{{ item.description }}</span>
+        </div>
+        <span class="material-icons">north_east</span>
+      </button>
+
+      <div class="search-empty" *ngIf="filteredSuggestions.length === 0">
+        No matching pages. Try another keyword.
+      </div>
+    </div>
+  </div>
+</ui-modal>
