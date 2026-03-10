@@ -8,11 +8,13 @@ import { UiBadgeComponent } from '../../../../shared/ui/badge/ui-badge.component
 import { UiLoadingComponent } from '../../../../shared/ui/loading/ui-loading.component';
 import { UiEmptyStateComponent } from '../../../../shared/ui/empty-state/ui-empty-state.component';
 import { UiErrorStateComponent } from '../../../../shared/ui/error-state/ui-error-state.component';
+import { TableToolbarFilter, UiTableToolbarComponent } from '../../../../shared/ui/table-toolbar/ui-table-toolbar.component';
 import { UiTablePaginationComponent } from '../../../../shared/ui/table-pagination/ui-table-pagination.component';
 import { ToastService } from '../../../../core/services/toast.service';
 import { ActivityService } from '../../../../core/services/activity.service';
 import { ActivityItem, ActivityFilter } from '../../../../core/models/activity.model';
 import { TableQuery, TableResult } from '../../../../core/models/table.model';
+import { exportToCsv } from '../../../../core/utils/export.utils';
 
 @Component({
   selector: 'app-activity',
@@ -28,6 +30,7 @@ import { TableQuery, TableResult } from '../../../../core/models/table.model';
     UiLoadingComponent,
     UiEmptyStateComponent,
     UiErrorStateComponent,
+    UiTableToolbarComponent,
     UiTablePaginationComponent
   ],
   templateUrl: './activity.component.html',
@@ -63,11 +66,29 @@ export class ActivityComponent {
   }
 
   exportLog() {
-    this.toastService.show({
-      title: 'Export requested',
-      message: 'Your activity export will be ready shortly.',
-      variant: 'info'
-    });
+    this.activityService
+      .getActivitiesExport(this.query)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(rows => {
+        if (!rows.length) {
+          this.toastService.show({
+            title: 'No activity to export',
+            message: 'Adjust your filters to export results.',
+            variant: 'info'
+          });
+          return;
+        }
+        exportToCsv('activity-log', rows, [
+          { key: 'title', label: 'Event' },
+          { key: 'meta', label: 'Details' },
+          { key: 'type', label: 'Type', format: value => this.formatLabel(value) }
+        ]);
+        this.toastService.show({
+          title: 'Export ready',
+          message: 'Your CSV download has started.',
+          variant: 'success'
+        });
+      });
   }
 
   retry() {
@@ -93,14 +114,36 @@ export class ActivityComponent {
     this.loadActivities();
   }
 
-  updateFilter(value: ActivityFilter) {
-    this.query = { ...this.query, page: 1, filters: { ...this.query.filters, type: value } };
+  updateFilter(key: string, value: string) {
+    if (key !== 'type') {
+      return;
+    }
+    this.query = { ...this.query, page: 1, filters: { ...this.query.filters, type: value as ActivityFilter } };
     this.loadActivities();
   }
 
   updatePagination(event: { page: number; pageSize: number }) {
     this.query = { ...this.query, page: event.page, pageSize: event.pageSize };
     this.loadActivities();
+  }
+
+  get tableFilters(): TableToolbarFilter[] {
+    return [
+      {
+        key: 'type',
+        label: 'types',
+        options: this.typeOptions,
+        value: this.query.filters?.['type']
+      }
+    ];
+  }
+
+  private formatLabel(value: unknown) {
+    if (!value) {
+      return '—';
+    }
+    const label = String(value);
+    return label.charAt(0).toUpperCase() + label.slice(1);
   }
 
   private loadActivities(showToast = false) {

@@ -1,0 +1,44 @@
+<div class="table-toolbar">
+  <div class="toolbar-title" *ngIf="title || subtitle">
+    <div class="title-row" *ngIf="title">
+      <h3>{{ title }}</h3>
+      <ng-content select="[toolbar-title-extra]"></ng-content>
+    </div>
+    <p class="muted" *ngIf="subtitle">{{ subtitle }}</p>
+  </div>
+
+  <div class="toolbar-actions">
+    <div class="toolbar-controls" *ngIf="showSearch || filters.length">
+      <input
+        *ngIf="showSearch"
+        class="ui-input"
+        type="search"
+        [attr.aria-label]="searchAriaLabel"
+        [placeholder]="searchPlaceholder"
+        [ngModel]="searchValue"
+        (ngModelChange)="searchChange.emit($event)" />
+
+      <select
+        *ngFor="let filter of filters; trackBy: trackByKey"
+        class="ui-input"
+        [ngModel]="filter.value ?? filter.options[0]"
+        (ngModelChange)="onFilterChange(filter.key, $event)">
+        <option *ngFor="let option of filter.options" [value]="option">
+          {{ option === 'all' ? ('All ' + filter.label) : (option | titlecase) }}
+        </option>
+      </select>
+    </div>
+
+    <div class="toolbar-buttons">
+      <ng-content select="[toolbar-actions]"></ng-content>
+      <ui-button
+        *ngIf="showExport"
+        variant="secondary"
+        size="sm"
+        [disabled]="exportDisabled"
+        (click)="export.emit()">
+        {{ exportLabel }}
+      </ui-button>
+    </div>
+  </div>
+</div>

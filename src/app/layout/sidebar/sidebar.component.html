@@ -2,10 +2,12 @@
   class="sidebar"
   [class.closed]="!isOpen"
   [class.mobile]="isMobile"
+  [class.collapsed]="isCollapsed && !isMobile"
   [class.mobile-open]="isMobile && isOpen">
 
   <div class="logo">
-    NovaDash
+    <span class="logo-mark">ND</span>
+    <span class="logo-text">NovaDash</span>
   </div>
 
   <nav class="nav-links" aria-label="Main navigation">
@@ -13,6 +15,7 @@
       routerLink="/app"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
+      title="Dashboard"
       (click)="closeSidebar.emit()">
       <span class="material-icons">dashboard</span>
       <span class="link-text">Dashboard</span>
@@ -21,6 +24,7 @@
     <a
       routerLink="/app/users"
       routerLinkActive="active"
+      title="Users"
       (click)="closeSidebar.emit()">
       <span class="material-icons">group</span>
       <span class="link-text">Users</span>
@@ -29,6 +33,7 @@
     <a
       routerLink="/app/analytics"
       routerLinkActive="active"
+      title="Analytics"
       (click)="closeSidebar.emit()">
       <span class="material-icons">bar_chart</span>
       <span class="link-text">Analytics</span>
@@ -37,6 +42,7 @@
     <a
       routerLink="/app/billing"
       routerLinkActive="active"
+      title="Billing"
       (click)="closeSidebar.emit()">
       <span class="material-icons">credit_card</span>
       <span class="link-text">Billing</span>
@@ -45,6 +51,7 @@
     <a
       routerLink="/app/team"
       routerLinkActive="active"
+      title="Team"
       (click)="closeSidebar.emit()">
       <span class="material-icons">groups</span>
       <span class="link-text">Team</span>
@@ -53,6 +60,7 @@
     <a
       routerLink="/app/activity"
       routerLinkActive="active"
+      title="Activity"
       (click)="closeSidebar.emit()">
       <span class="material-icons">history</span>
       <span class="link-text">Activity</span>
@@ -61,6 +69,7 @@
     <a
       routerLink="/app/settings"
       routerLinkActive="active"
+      title="Settings"
       (click)="closeSidebar.emit()">
       <span class="material-icons">settings</span>
       <span class="link-text">Settings</span>

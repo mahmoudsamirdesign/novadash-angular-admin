@@ -85,6 +85,33 @@ export class TeamService {
     return of(result).pipe(delay(300));
   }
 
+  getMembersExport(query: TableQuery): Observable<TeamMember[]> {
+    const exportQuery: TableQuery = {
+      ...query,
+      page: 1,
+      pageSize: this.members.length
+    };
+    const result = applyTableQuery(this.members, exportQuery, {
+      searchFields: ['name', 'email', 'role', 'status'],
+      filterFn: (member, filters) => {
+        const roleFilter = filters['role'];
+        const statusFilter = filters['status'];
+
+        if (roleFilter && roleFilter !== 'all' && member.role !== roleFilter) {
+          return false;
+        }
+
+        if (statusFilter && statusFilter !== 'all' && member.status !== statusFilter) {
+          return false;
+        }
+
+        return true;
+      }
+    });
+
+    return of(result.items).pipe(delay(150));
+  }
+
   getInvites(): Observable<TeamInvite[]> {
     return this.invites$.pipe(delay(200));
   }

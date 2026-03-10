@@ -105,6 +105,33 @@ export class UsersService {
     return of(result).pipe(delay(300));
   }
 
+  getUsersExport(query: TableQuery): Observable<User[]> {
+    const exportQuery: TableQuery = {
+      ...query,
+      page: 1,
+      pageSize: this.users.length
+    };
+    const result = applyTableQuery(this.users, exportQuery, {
+      searchFields: ['name', 'email', 'role', 'team', 'status'],
+      filterFn: (user, filters) => {
+        const statusFilter = filters['status'];
+        const roleFilter = filters['role'];
+
+        if (statusFilter && statusFilter !== 'all' && user.status !== statusFilter) {
+          return false;
+        }
+
+        if (roleFilter && roleFilter !== 'all' && user.role !== roleFilter) {
+          return false;
+        }
+
+        return true;
+      }
+    });
+
+    return of(result.items).pipe(delay(150));
+  }
+
   getStatusOptions(): UserStatus[] {
     return ['active', 'pending', 'inactive'];
   }

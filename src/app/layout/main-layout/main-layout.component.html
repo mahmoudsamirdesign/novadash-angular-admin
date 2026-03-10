@@ -2,6 +2,7 @@
   <app-sidebar
     [isOpen]="isSidebarOpen"
     [isMobile]="isMobile"
+    [isCollapsed]="isSidebarCollapsed"
     (closeSidebar)="closeSidebar()">
   </app-sidebar>
 
@@ -14,6 +15,7 @@
   <div class="main-area">
     <app-header
       [isMobile]="isMobile"
+      [isSidebarCollapsed]="isSidebarCollapsed"
       [pageTitle]="pageTitle"
       [pageSubtitle]="pageSubtitle"
       (menuClick)="toggleSidebar()">

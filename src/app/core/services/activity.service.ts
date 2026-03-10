@@ -35,6 +35,26 @@ export class ActivityService {
     return of(result).pipe(delay(300));
   }
 
+  getActivitiesExport(query: TableQuery): Observable<ActivityItem[]> {
+    const exportQuery: TableQuery = {
+      ...query,
+      page: 1,
+      pageSize: this.activities.length
+    };
+    const result = applyTableQuery(this.activities, exportQuery, {
+      searchFields: ['title', 'meta', 'type'],
+      filterFn: (item, filters) => {
+        const typeFilter = filters['type'];
+        if (typeFilter && typeFilter !== 'all' && item.type !== typeFilter) {
+          return false;
+        }
+        return true;
+      }
+    });
+
+    return of(result.items).pipe(delay(150));
+  }
+
   getTypes(): ActivityFilter[] {
     return ['all', 'security', 'billing', 'team', 'product'];
   }

@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject } from '@angular/core';
-import { NgFor, NgIf, TitleCasePipe } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UiCardComponent } from '../../../../shared/ui/card/ui-card.component';
@@ -8,6 +8,7 @@ import { UiBadgeComponent } from '../../../../shared/ui/badge/ui-badge.component
 import { UiDataTableComponent, DataTableColumn } from '../../../../shared/ui/data-table/ui-data-table.component';
 import { UiModalComponent } from '../../../../shared/ui/modal/ui-modal.component';
 import { UiLoadingComponent } from '../../../../shared/ui/loading/ui-loading.component';
+import { TableToolbarFilter, UiTableToolbarComponent } from '../../../../shared/ui/table-toolbar/ui-table-toolbar.component';
 import { UiTablePaginationComponent } from '../../../../shared/ui/table-pagination/ui-table-pagination.component';
 import { UiFieldComponent } from '../../../../shared/ui/field/ui-field.component';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -15,6 +16,7 @@ import { BillingService } from '../../../../core/services/billing.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { BillingSummary, Invoice } from '../../../../core/models/billing.model';
 import { TableQuery, TableResult } from '../../../../core/models/table.model';
+import { exportTableToCsv } from '../../../../core/utils/export.utils';
 
 @Component({
   selector: 'app-billing',
@@ -22,7 +24,6 @@ import { TableQuery, TableResult } from '../../../../core/models/table.model';
   imports: [
     NgFor,
     NgIf,
-    TitleCasePipe,
     FormsModule,
     ReactiveFormsModule,
     UiCardComponent,
@@ -31,6 +32,7 @@ import { TableQuery, TableResult } from '../../../../core/models/table.model';
     UiDataTableComponent,
     UiModalComponent,
     UiLoadingComponent,
+    UiTableToolbarComponent,
     UiTablePaginationComponent,
     UiFieldComponent
   ],
@@ -227,7 +229,10 @@ export class BillingComponent {
     this.loadInvoices();
   }
 
-  updateFilter(value: string) {
+  updateFilter(key: string, value: string) {
+    if (key !== 'status') {
+      return;
+    }
     this.query = { ...this.query, page: 1, filters: { ...this.query.filters, status: value } };
     this.loadInvoices();
   }
@@ -256,5 +261,38 @@ export class BillingComponent {
     this.downloadToastTimer = setTimeout(() => {
       this.downloadToastId = null;
     }, 2600);
+  }
+
+  exportInvoices() {
+    this.billingService
+      .getInvoicesExport(this.query)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(rows => {
+        if (!rows.length) {
+          this.toastService.show({
+            title: 'No invoices to export',
+            message: 'Adjust your filters to export results.',
+            variant: 'info'
+          });
+          return;
+        }
+        exportTableToCsv('billing-invoices', this.invoiceColumns, rows);
+        this.toastService.show({
+          title: 'Export ready',
+          message: 'Your CSV download has started.',
+          variant: 'success'
+        });
+      });
+  }
+
+  get tableFilters(): TableToolbarFilter[] {
+    return [
+      {
+        key: 'status',
+        label: 'statuses',
+        options: this.statusOptions,
+        value: this.query.filters?.['status']
+      }
+    ];
   }
 }

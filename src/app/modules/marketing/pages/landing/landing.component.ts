@@ -39,7 +39,7 @@ export class LandingComponent {
   pricing = [
     {
       name: 'Starter',
-      price: '$39',
+      price: '$49',
       description: 'For solo founders and MVP launches.',
       badge: 'Popular'
     },

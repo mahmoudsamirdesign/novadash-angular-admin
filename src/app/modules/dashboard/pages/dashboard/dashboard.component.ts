@@ -48,6 +48,16 @@ export class DashboardComponent implements AfterViewInit {
   stats: DashboardStat[] = [];
   activities: DashboardActivity[] = [];
   customers: DashboardCustomer[] = [];
+  pipelineStages = [
+    { label: 'Qualified leads', value: '48%', amount: '$92k', percent: 48 },
+    { label: 'Proposals sent', value: '31%', amount: '$64k', percent: 31 },
+    { label: 'Negotiation', value: '18%', amount: '$41k', percent: 18 }
+  ];
+  slaMetrics = [
+    { label: 'First response', value: '1h 12m', meta: 'Target 2h', status: 'positive' },
+    { label: 'Resolution time', value: '6h 40m', meta: 'Target 8h', status: 'positive' },
+    { label: 'CSAT score', value: '4.8 / 5', meta: 'Last 30 days', status: 'neutral' }
+  ];
 
   lineChartData = {
     labels: [] as string[],
@@ -103,6 +113,10 @@ export class DashboardComponent implements AfterViewInit {
 
   constructor() {
     this.themeService.theme$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.applyChartTheme());
+
+    this.themeService.preset$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.applyChartTheme());
 

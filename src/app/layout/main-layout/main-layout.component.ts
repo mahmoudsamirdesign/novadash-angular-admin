@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PLATFORM_ID } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from '../header/header.component';
+import { SidebarStateService } from '../../core/services/sidebar-state.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -16,6 +17,7 @@ import { HeaderComponent } from '../header/header.component';
 })
 export class MainLayoutComponent implements OnInit {
   isSidebarOpen = true;
+  isSidebarCollapsed = false;
   isMobile = false;
 
   pageTitle = 'Dashboard';
@@ -25,10 +27,12 @@ export class MainLayoutComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly sidebarState = inject(SidebarStateService);
 
   ngOnInit() {
     this.checkScreenSize();
     this.updateHeaderTexts();
+    this.isSidebarCollapsed = this.sidebarState.collapsed;
 
     this.router.events
       .pipe(
@@ -55,7 +59,12 @@ export class MainLayoutComponent implements OnInit {
   }
 
   toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
+    if (this.isMobile) {
+      this.isSidebarOpen = !this.isSidebarOpen;
+      return;
+    }
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    this.sidebarState.setCollapsed(this.isSidebarCollapsed);
   }
 
   closeSidebar() {

@@ -43,6 +43,44 @@
         </div>
     </div>
 
+    <div class="insights-grid" *ngIf="!isLoading">
+        <div class="insight-card">
+            <div class="card-header">
+                <h3>Pipeline health</h3>
+                <p>Deals moving through stages</p>
+            </div>
+            <div class="pipeline-list">
+                <div class="pipeline-item" *ngFor="let stage of pipelineStages">
+                    <div class="pipeline-row">
+                        <span>{{ stage.label }}</span>
+                        <strong>{{ stage.value }}</strong>
+                    </div>
+                    <div class="pipeline-meta">
+                        <span class="muted">{{ stage.amount }}</span>
+                        <span class="muted">{{ stage.percent }}% of total</span>
+                    </div>
+                    <div class="pipeline-bar">
+                        <span class="pipeline-fill" [style.width.%]="stage.percent"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="insight-card">
+            <div class="card-header">
+                <h3>Support SLA</h3>
+                <p>Response and resolution targets</p>
+            </div>
+            <div class="sla-grid">
+                <div class="sla-item" *ngFor="let metric of slaMetrics" [class.positive]="metric.status === 'positive'">
+                    <span class="label">{{ metric.label }}</span>
+                    <strong>{{ metric.value }}</strong>
+                    <span class="muted">{{ metric.meta }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="table-card" *ngIf="!isLoading">
         <div class="card-header">
             <h3>Top Customers</h3>

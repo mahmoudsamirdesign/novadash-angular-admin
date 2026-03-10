@@ -13,7 +13,7 @@ export class BillingService {
     {
       id: 'starter',
       name: 'Starter',
-      price: '$39 / month',
+      price: '$49 / month',
       billingCycle: 'Monthly',
       renewal: 'Renews on Apr 18, 2026',
       description: 'For solo founders and MVPs.',
@@ -107,6 +107,26 @@ export class BillingService {
     });
 
     return of(result).pipe(delay(200));
+  }
+
+  getInvoicesExport(query: TableQuery): Observable<Invoice[]> {
+    const exportQuery: TableQuery = {
+      ...query,
+      page: 1,
+      pageSize: this.invoices.length
+    };
+    const result = applyTableQuery(this.invoices, exportQuery, {
+      searchFields: ['id', 'date', 'amount', 'status'],
+      filterFn: (invoice, filters) => {
+        const statusFilter = filters['status'];
+        if (statusFilter && statusFilter !== 'all' && invoice.status !== statusFilter) {
+          return false;
+        }
+        return true;
+      }
+    });
+
+    return of(result.items).pipe(delay(150));
   }
 
   changePlan(planId: string): Observable<BillingPlan> {

@@ -17,6 +17,24 @@
   text-align: center;
   white-space: nowrap;
   font-family: var(--font-display);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  letter-spacing: 0.02em;
 }
 
 .nav-links {
@@ -51,6 +69,32 @@
   .link-text {
     display: inline-block;
   }
+}
+
+.sidebar.collapsed {
+  width: 88px;
+  padding: 24px 10px;
+}
+
+.sidebar.collapsed .logo-text {
+  display: none;
+}
+
+.sidebar.collapsed .logo-mark {
+  display: inline-flex;
+}
+
+.sidebar.collapsed .nav-links {
+  align-items: center;
+}
+
+.sidebar.collapsed .nav-links a {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sidebar.collapsed .link-text {
+  display: none;
 }
 
 @media (max-width: 900px) {

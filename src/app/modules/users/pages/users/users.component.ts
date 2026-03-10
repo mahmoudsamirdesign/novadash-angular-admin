@@ -1,29 +1,30 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf, TitleCasePipe } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UiCardComponent } from '../../../../shared/ui/card/ui-card.component';
 import { UiButtonComponent } from '../../../../shared/ui/button/ui-button.component';
 import { UiDataTableComponent, DataTableColumn } from '../../../../shared/ui/data-table/ui-data-table.component';
 import { UiLoadingComponent } from '../../../../shared/ui/loading/ui-loading.component';
+import { TableToolbarFilter, UiTableToolbarComponent } from '../../../../shared/ui/table-toolbar/ui-table-toolbar.component';
 import { UiTablePaginationComponent } from '../../../../shared/ui/table-pagination/ui-table-pagination.component';
 import { UsersService } from '../../../../core/services/users.service';
 import { TableQuery, TableResult } from '../../../../core/models/table.model';
 import { User, UserStats } from '../../../../core/models/user.model';
 import { ToastService } from '../../../../core/services/toast.service';
+import { exportTableToCsv } from '../../../../core/utils/export.utils';
 
 @Component({
   selector: 'app-users',
   standalone: true,
   imports: [
     FormsModule,
-    NgFor,
     NgIf,
-    TitleCasePipe,
     UiCardComponent,
     UiButtonComponent,
     UiDataTableComponent,
     UiLoadingComponent,
+    UiTableToolbarComponent,
     UiTablePaginationComponent
   ],
   templateUrl: './users.component.html',
@@ -106,7 +107,7 @@ export class UsersComponent {
     this.loadUsers();
   }
 
-  updateFilter(key: 'status' | 'role', value: string) {
+  updateFilter(key: string, value: string) {
     this.query = {
       ...this.query,
       page: 1,
@@ -129,11 +130,42 @@ export class UsersComponent {
   }
 
   exportUsers() {
-    this.toastService.show({
-      title: 'Export queued',
-      message: 'User export will be generated when a backend is connected.',
-      variant: 'info'
-    });
+    this.usersService
+      .getUsersExport(this.query)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(rows => {
+        if (!rows.length) {
+          this.toastService.show({
+            title: 'No users to export',
+            message: 'Adjust your filters to export results.',
+            variant: 'info'
+          });
+          return;
+        }
+        exportTableToCsv('workspace-users', this.columns, rows);
+        this.toastService.show({
+          title: 'Export ready',
+          message: 'Your CSV download has started.',
+          variant: 'success'
+        });
+      });
+  }
+
+  get tableFilters(): TableToolbarFilter[] {
+    return [
+      {
+        key: 'status',
+        label: 'statuses',
+        options: this.statusOptions,
+        value: this.query.filters?.['status']
+      },
+      {
+        key: 'role',
+        label: 'roles',
+        options: this.roleOptions,
+        value: this.query.filters?.['role']
+      }
+    ];
   }
 
   private formatLabel(value: unknown) {

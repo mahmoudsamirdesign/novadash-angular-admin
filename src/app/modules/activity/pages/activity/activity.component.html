@@ -6,34 +6,21 @@
     </div>
     <div class="actions">
       <ui-button variant="secondary" (click)="refresh()">Refresh feed</ui-button>
-      <ui-button variant="ghost" (click)="exportLog()">Export log</ui-button>
+      <ui-button variant="ghost" (click)="exportLog()">Export CSV</ui-button>
     </div>
   </div>
 
   <ui-card>
-    <div class="card-header">
-      <div>
-        <h3>Latest events</h3>
-        <p class="muted">Audit key actions from billing, security, and product updates.</p>
-      </div>
-      <div class="table-actions">
-        <input
-          class="ui-input"
-          type="search"
-          aria-label="Search activity"
-          placeholder="Search activity"
-          [ngModel]="query.search"
-          (ngModelChange)="updateSearch($event)" />
-        <select
-          class="ui-input"
-          [ngModel]="query.filters?.['type']"
-          (ngModelChange)="updateFilter($event)">
-          <option *ngFor="let type of typeOptions" [value]="type">
-            {{ type === 'all' ? 'All types' : (type | titlecase) }}
-          </option>
-        </select>
-      </div>
-    </div>
+    <ui-table-toolbar
+      title="Latest events"
+      subtitle="Audit key actions from billing, security, and product updates."
+      searchPlaceholder="Search activity"
+      searchAriaLabel="Search activity"
+      [searchValue]="query.search ?? ''"
+      [filters]="tableFilters"
+      (searchChange)="updateSearch($event)"
+      (filterChange)="updateFilter($event.key, $event.value)">
+    </ui-table-toolbar>
 
     <ui-loading *ngIf="isLoading" title="Syncing activity" message="Fetching the latest updates."></ui-loading>
 

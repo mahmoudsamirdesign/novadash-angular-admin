@@ -10,12 +10,14 @@ import { UiFieldComponent } from '../../../../shared/ui/field/ui-field.component
 import { UiEmptyStateComponent } from '../../../../shared/ui/empty-state/ui-empty-state.component';
 import { UiBadgeComponent } from '../../../../shared/ui/badge/ui-badge.component';
 import { UiLoadingComponent } from '../../../../shared/ui/loading/ui-loading.component';
+import { TableToolbarFilter, UiTableToolbarComponent } from '../../../../shared/ui/table-toolbar/ui-table-toolbar.component';
 import { UiTablePaginationComponent } from '../../../../shared/ui/table-pagination/ui-table-pagination.component';
 import { ToastService } from '../../../../core/services/toast.service';
 import { TeamService } from '../../../../core/services/team.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { TableQuery, TableResult } from '../../../../core/models/table.model';
 import { TeamInvite, TeamMember } from '../../../../core/models/team.model';
+import { exportTableToCsv } from '../../../../core/utils/export.utils';
 
 @Component({
   selector: 'app-team',
@@ -34,6 +36,7 @@ import { TeamInvite, TeamMember } from '../../../../core/models/team.model';
     UiEmptyStateComponent,
     UiBadgeComponent,
     UiLoadingComponent,
+    UiTableToolbarComponent,
     UiTablePaginationComponent
   ],
   templateUrl: './team.component.html',
@@ -121,7 +124,7 @@ export class TeamComponent {
     this.loadMembers();
   }
 
-  updateFilter(key: 'role' | 'status', value: string) {
+  updateFilter(key: string, value: string) {
     this.query = {
       ...this.query,
       page: 1,
@@ -185,6 +188,45 @@ export class TeamComponent {
       message: `Resent invitation to ${invite.email}.`,
       variant: 'info'
     });
+  }
+
+  exportMembers() {
+    this.teamService
+      .getMembersExport(this.query)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(rows => {
+        if (!rows.length) {
+          this.toastService.show({
+            title: 'No members to export',
+            message: 'Adjust your filters to export results.',
+            variant: 'info'
+          });
+          return;
+        }
+        exportTableToCsv('team-members', this.columns, rows);
+        this.toastService.show({
+          title: 'Export ready',
+          message: 'Your CSV download has started.',
+          variant: 'success'
+        });
+      });
+  }
+
+  get tableFilters(): TableToolbarFilter[] {
+    return [
+      {
+        key: 'status',
+        label: 'statuses',
+        options: this.statusOptions,
+        value: this.query.filters?.['status']
+      },
+      {
+        key: 'role',
+        label: 'roles',
+        options: this.roleOptions,
+        value: this.query.filters?.['role']
+      }
+    ];
   }
 
   private formatLabel(value: unknown) {

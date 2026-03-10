@@ -27,6 +27,24 @@
     </ui-card>
 
     <ui-card>
+      <h3>Appearance</h3>
+      <p class="muted">Pick an accent preset for buttons, charts, and highlights.</p>
+      <div class="preset-grid">
+        <button
+          class="preset-btn"
+          type="button"
+          *ngFor="let preset of presetOptions"
+          (click)="setPreset(preset.id)"
+          [class.active]="activePreset === preset.id"
+          [attr.aria-label]="preset.label + ' preset'"
+          [attr.aria-pressed]="activePreset === preset.id">
+          <span class="swatch" [style.background]="preset.color"></span>
+          <span>{{ preset.label }}</span>
+        </button>
+      </div>
+    </ui-card>
+
+    <ui-card>
       <h3>Security</h3>
       <p class="muted">Control authentication requirements.</p>
       <div class="setting-row">

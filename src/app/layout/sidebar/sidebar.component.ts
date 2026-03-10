@@ -11,5 +11,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 export class SidebarComponent {
   @Input() isOpen = true;
   @Input() isMobile = false;
+  @Input() isCollapsed = false;
   @Output() closeSidebar = new EventEmitter<void>();
 }

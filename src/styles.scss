@@ -15,6 +15,7 @@
   --color-muted: #64748b;
   --color-primary: #2563eb;
   --color-primary-600: #1d4ed8;
+  --color-primary-rgb: 37, 99, 235;
   --color-danger: #ef4444;
   --color-danger-600: #dc2626;
   --color-success: #22c55e;
@@ -43,6 +44,7 @@
   --color-muted: #94a3b8;
   --color-primary: #60a5fa;
   --color-primary-600: #3b82f6;
+  --color-primary-rgb: 96, 165, 250;
   --color-danger: #f87171;
   --color-danger-600: #ef4444;
   --color-success: #34d399;
@@ -56,6 +58,69 @@
 
   --shadow-sm: 0 6px 20px rgba(2, 6, 23, 0.4);
   --shadow-md: 0 16px 24px rgba(2, 6, 23, 0.5);
+}
+
+/* =========================
+   THEME PRESETS
+========================= */
+:root[data-accent='blue'] {
+  --color-primary: #2563eb;
+  --color-primary-600: #1d4ed8;
+  --color-primary-rgb: 37, 99, 235;
+}
+
+:root[data-accent='purple'] {
+  --color-primary: #7c3aed;
+  --color-primary-600: #6d28d9;
+  --color-primary-rgb: 124, 58, 237;
+}
+
+:root[data-accent='emerald'] {
+  --color-primary: #059669;
+  --color-primary-600: #047857;
+  --color-primary-rgb: 5, 150, 105;
+}
+
+:root[data-accent='rose'] {
+  --color-primary: #e11d48;
+  --color-primary-600: #be123c;
+  --color-primary-rgb: 225, 29, 72;
+}
+
+:root[data-accent='amber'] {
+  --color-primary: #f59e0b;
+  --color-primary-600: #d97706;
+  --color-primary-rgb: 245, 158, 11;
+}
+
+:root[data-theme='dark'][data-accent='blue'] {
+  --color-primary: #60a5fa;
+  --color-primary-600: #3b82f6;
+  --color-primary-rgb: 96, 165, 250;
+}
+
+:root[data-theme='dark'][data-accent='purple'] {
+  --color-primary: #c084fc;
+  --color-primary-600: #a855f7;
+  --color-primary-rgb: 192, 132, 252;
+}
+
+:root[data-theme='dark'][data-accent='emerald'] {
+  --color-primary: #34d399;
+  --color-primary-600: #10b981;
+  --color-primary-rgb: 52, 211, 153;
+}
+
+:root[data-theme='dark'][data-accent='rose'] {
+  --color-primary: #fb7185;
+  --color-primary-600: #f43f5e;
+  --color-primary-rgb: 251, 113, 133;
+}
+
+:root[data-theme='dark'][data-accent='amber'] {
+  --color-primary: #fbbf24;
+  --color-primary-600: #f59e0b;
+  --color-primary-rgb: 251, 191, 36;
 }
 
 /* =========================
@@ -110,7 +175,7 @@ img {
 
 .ui-input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.15);
 }
 
 .ui-input::placeholder {

@@ -18,6 +18,7 @@ import { AuthUser } from '../../core/models/auth.model';
 })
 export class HeaderComponent {
   @Input() isMobile = false;
+  @Input() isSidebarCollapsed = false;
   @Input() pageTitle = 'Dashboard';
   @Input() pageSubtitle = 'Welcome back';
   @Output() menuClick = new EventEmitter<void>();

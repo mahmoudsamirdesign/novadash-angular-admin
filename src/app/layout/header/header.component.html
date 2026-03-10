@@ -1,5 +1,15 @@
 <header class="header">
     <div class="header-left">
+        <button
+          class="menu-btn"
+          *ngIf="!isMobile"
+          (click)="menuClick.emit()"
+          [attr.aria-label]="isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+            <span class="material-icons">
+                {{ isSidebarCollapsed ? 'chevron_right' : 'chevron_left' }}
+            </span>
+        </button>
+
         <button class="menu-btn" *ngIf="isMobile" (click)="menuClick.emit()" aria-label="Open menu">
             <span class="material-icons">menu</span>
         </button>

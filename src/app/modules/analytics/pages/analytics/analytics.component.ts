@@ -63,6 +63,10 @@ export class AnalyticsComponent implements AfterViewInit {
     this.themeService.theme$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.applyChartTheme());
+
+    this.themeService.preset$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.applyChartTheme());
   }
 
   ngAfterViewInit() {
